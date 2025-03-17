@@ -8,8 +8,8 @@
 #endif
 
 Texture2D SpriteTexture;
-uniform float2 playerPos;
-uniform float time; 
+float amount;
+
 
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -25,13 +25,13 @@ struct VertexShaderOutput
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 col = tex2D(SpriteTextureSampler,input.TextureCoordinates) * input.Color;
-    col.a = 1;
-    float radius = 1.2;
-    float2 pUV = input.TextureCoordinates * 256.;
-    float2 coords = float2(floor(pUV.x), floor(pUV.y) );
-    col.bg += 3. / length(playerPos*256. - coords);
-    col.a -= 40. / length(playerPos * 256. - coords);
+    float4 col = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
+	
+    if (input.TextureCoordinates.x < amount && col.r != 0. && col.b != 0. && col.g != 0.)
+    {
+        col.rgb = 1.;
+    }
+	
 	
     return col;
 }

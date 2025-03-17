@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WrathOfTheWraithGame
 {
-    internal class MouseBehaviour
+    public class WarriorShootBulletOne : Projectile
     {
+
     }
 }

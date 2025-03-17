@@ -8,7 +8,8 @@
 #endif
 
 Texture2D SpriteTexture;
-float time;
+uniform float time;
+
 
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -24,11 +25,17 @@ struct VertexShaderOutput
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 col = tex2D(SpriteTextureSampler,input.TextureCoordinates) * input.Color;
-    if (input.TextureCoordinates.x < 0.1)
-        col.r = 1;
-    return col; 
-
+	
+    float4 col = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
+    float2 origin = 0.1;
+	
+    if (length(input.TextureCoordinates - origin) > frac(time) * 0.002)
+    {
+        col.r += smoothstep(0,0.85, 0.1 / frac(time) * min(5.0, length(input.TextureCoordinates)));
+    }
+		
+	
+    return col;
 }
 
 technique SpriteDrawing

@@ -8,8 +8,7 @@
 #endif
 
 Texture2D SpriteTexture;
-uniform float2 playerPos;
-uniform float time; 
+uniform float t;
 
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -23,17 +22,24 @@ struct VertexShaderOutput
 	float2 TextureCoordinates : TEXCOORD0;
 };
 
+float2x2 Rot(float angle)
+{
+    float a = angle * (3.14 / 180.);
+    return float2x2(cos(a), -sin(a), sin(a), cos(a));
+}
+
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
 	float4 col = tex2D(SpriteTextureSampler,input.TextureCoordinates) * input.Color;
-    col.a = 1;
-    float radius = 1.2;
-    float2 pUV = input.TextureCoordinates * 256.;
-    float2 coords = float2(floor(pUV.x), floor(pUV.y) );
-    col.bg += 3. / length(playerPos*256. - coords);
-    col.a -= 40. / length(playerPos * 256. - coords);
+    float2x2 rotation = Rot(45.);
+    float2 rUV = mul(rotation, input.TextureCoordinates);
 	
-    return col;
+    if (rUV.y < fmod(t, 1.) * 2 + 0.1 && rUV.y > fmod(t, 1.) * 2 && col.a == 1.)
+    {
+        col.rgb = float3(1.,1.,1.);
+    }
+	
+    return col; 
 }
 
 technique SpriteDrawing

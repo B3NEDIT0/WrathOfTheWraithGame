@@ -9,13 +9,15 @@ namespace WrathOfTheWraithGame
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private GM gameManager;
-        float timeAmount;
+
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
         }
 
         protected override void Initialize()
@@ -23,13 +25,13 @@ namespace WrathOfTheWraithGame
             _graphics.PreferredBackBufferWidth = 2048;
             _graphics.PreferredBackBufferHeight = 1536;
             _graphics.ApplyChanges();
-            timeAmount = 0;
+            
 
             Globals.Content = Content;
+            Globals.GraphicsDevice = GraphicsDevice;
             gameManager = new GM();
-            gameManager.Resolution.X = 2048;
-            gameManager.Resolution.Y = 1536;
-
+            Globals.Resolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            
             base.Initialize();
         }
 
@@ -45,11 +47,13 @@ namespace WrathOfTheWraithGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Globals.CanEnd) Exit();
+
             Globals.Update(gameTime);
             gameManager.Update(gameTime);
-            timeAmount += Globals.Seconds;
-            //gameManager.emberEffect.Parameters["time"].SetValue(timeAmount);
-           
+            
+            //gameManager.teleportEffect.Parameters["playerPosition"].SetValue(gameManager.player.Position);
+            
 
             base.Update(gameTime);
         }

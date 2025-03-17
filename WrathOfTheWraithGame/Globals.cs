@@ -14,17 +14,45 @@ namespace WrathOfTheWraithGame
 
     public static class Globals
     {
-        public static float Seconds { get; set; }
+        public enum ProjectileType { SentryBullet, }
+        public static float DeltaTime { get; set; }
+        public static Dictionary<Vector2, int> CurrentTileMap { get; set; } 
+        public static Dictionary<Vector2, int> CurrentNonObstacles { get; set; }
+
+        
+
+        public static List<Button> MainMenuButtons { get; set; }    
+        public static Dictionary<Vector2, int> CurrentObstacles { get; set; }
+        public static GameTime GameTime { get; set; }
         public static SpriteBatch SpriteBatch { get; set;}
+
+        public static bool CanEnd { get; set; }
+
+        public enum GameState { MainMenu, Settings, Saves, ClassSelection, CharacterCreation, MapOptions, HelpScreen, Mausoleum, Cavern, }
+
+        public static GameState CurrentGameState { get; set; }
 
         public static ContentManager Content {  get; set;}
 
-        public static GraphicsDeviceManager Graphics {  get; set;}
+        public static Vector2 Resolution { get; set; }
+
+        public static int MapSizeX { get; set; }
+
+        public static int MapSizeY { get; set; }
+
+        public static GraphicsDeviceManager GraphicsManager {  get; set;}
+        public static GraphicsDevice GraphicsDevice { get; set; }
 
         public static void Update(GameTime gameTime)
         {
-            Seconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            GameTime = gameTime;
+            
+        }
 
+        public static float Mod(float x, float y)
+        {
+            return x - y * (float)Math.Floor((decimal)(x / y));
         }
     }
 }
